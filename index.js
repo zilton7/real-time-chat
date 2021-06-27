@@ -9,8 +9,12 @@ var server = app.listen(3000, () => {
 
 app.use(express.static("public"));
 
-var upgradeServer = socket(server);
+var serverWithSocket = socket(server);
 
-upgradeServer.on("connection", () => {
-  console.log("Websocker Connected", socket.id);
+serverWithSocket.on("connection", (socket) => {
+  socket.on("sendMsg", (data) => {
+    serverWithSocket.emit("broadcastMsg", data);
+  });
+
+  console.log("Websocket Connected", socket.id);
 });
